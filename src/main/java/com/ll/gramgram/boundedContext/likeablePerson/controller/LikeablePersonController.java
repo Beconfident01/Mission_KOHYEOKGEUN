@@ -72,10 +72,10 @@ public class LikeablePersonController {
     public String likeablePersondelete(@PathVariable Long id) {
 
 
-        RsData<LikeablePerson> deleteRsData = likeablePersonService.delete(likeablePersonService.findById(id));
+        RsData<LikeablePerson> deleteRsData = likeablePersonService.delete(rq.getLikeablePerson());
 
 
-        if(!deleteRsData.getData().equals(likeablePersonService.findById(id)){
+        if(!deleteRsData.getData().getId().equals(likeablePersonService.findByFromInstaMemberId(id))){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
 
