@@ -4,6 +4,7 @@ import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
+import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,8 @@ import java.util.List;
 public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
+
+
 
     @GetMapping("/add")
     public String showAdd() {
@@ -66,21 +69,19 @@ public class LikeablePersonController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-
-        RsData<LikeablePerson> deleteRsData =likeablePersonService.delete()
+    public String likeablePersondelete(@PathVariable Long id) {
 
 
-        if(!deleteRsData.getData().getId().equals(likeablePersonService.findByFromInstaMemberId(id)) {
+        RsData<LikeablePerson> deleteRsData = likeablePersonService.delete(likeablePersonService.findById(id));
+
+
+        if(!deleteRsData.getData().equals(likeablePersonService.findById(id)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
 
         if (deleteRsData.isFail()) {
             return rq.historyBack(deleteRsData);
         }
-
-
-
 
         return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
     }
